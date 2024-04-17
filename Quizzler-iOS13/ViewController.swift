@@ -12,12 +12,11 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var falseButton: UIButton!
     @IBOutlet weak var trueButton: UIButton!
-    
     @IBOutlet weak var getItButton: UIButton!
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var proggressBar: UIProgressView!
+    @IBOutlet weak var finalResults: UILabel!
     
-
     
     var quizQuestions = [
         QuizQuestionStructure(q:"The Earth is flat.", a: true),
@@ -32,9 +31,9 @@ class ViewController: UIViewController {
         QuizQuestionStructure(q: "Albert Einstein discovered gravity.", a: false)
     ]
     
-    var correctAnswerCount = 0
-
     
+
+    var correctAnswerCount = 0
     var quizQuestionNumber = 0
     var trueOrFalse = false
     
@@ -43,6 +42,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         updateUIQuestions()
         getItButton.isHidden = true
+        finalResults.isHidden = true
         
         
     }
@@ -67,6 +67,8 @@ class ViewController: UIViewController {
                 falseButton.isHidden = true
                 correctAnswerCount += 1
                 proggressBar.progress += 0.1
+                questionLabel.textColor = UIColor.green
+                finalResults.isHidden = true
             }
             else{
                 questionLabel.text = "Wrong!"
@@ -74,55 +76,83 @@ class ViewController: UIViewController {
                 trueButton.isHidden = true
                 falseButton.isHidden = true
                 proggressBar.progress += 0.1
+                questionLabel.textColor = UIColor.red
+                finalResults.isHidden = true
             }
-            
             quizQuestionNumber += 1
             print(quizQuestionNumber)
-            
         }
         else
         {
             let userAnswer = trueOrFalse
+            
             if userAnswer == quizQuestions[quizQuestionNumber].answer{
-                
-                getItButton.isHidden = false
-                trueButton.isHidden = true
-                falseButton.isHidden = true
                 correctAnswerCount += 1
                 proggressBar.progress += 0.1
-                questionLabel.text = "Correct!\n\n\nFINISH\n" + String(correctAnswerCount*10) + "% correct answers"
-            }
-            else{
-                
+                questionLabel.text = "Correct!\n\n\n"
+                questionLabel.textColor = UIColor.green
+                finalResults.isHidden = false
+                finalResults.text = "FINISH\n" + String(correctAnswerCount*10) + "% correct answers"
                 getItButton.isHidden = false
                 trueButton.isHidden = true
                 falseButton.isHidden = true
+
+            }
+            else
+            {
                 proggressBar.progress += 0.1
-                questionLabel.text = "Wrong!\n\n\nFINISH\n" + String(correctAnswerCount*10) + "% correct answers"
+                questionLabel.text = "Wrong!\n\n\n"
+                questionLabel.textColor = UIColor.red
+                finalResults.isHidden = false
+                finalResults.text = "FINISH\n" + String(correctAnswerCount*10) + "% correct answers"
+                getItButton.isHidden = false
+                trueButton.isHidden = true
+                falseButton.isHidden = true
+                
             }
 
-            trueButton.isHidden = true
-            falseButton.isHidden = true
-            quizQuestionNumber = 0
-            correctAnswerCount = 0
+
+
             proggressBar.progress = Float(quizQuestions.count)
-            getItButton.isHidden = false
             proggressBar.progress = 0
+            correctAnswerCount = 0
+            quizQuestionNumber = 0
+            self.questionLabel.isHidden = false
+            
+//            questionLabel.textColor = UIColor.clear
         }
-        
+
+
     }
     
+    
     @IBAction func getItButtonPressed(_ sender: UIButton) {
-        questionLabel.text = quizQuestions[quizQuestionNumber].question
-        trueButton.isHidden = false
-        falseButton.isHidden = false
-        getItButton.isHidden = true
+        
+        if quizQuestionNumber < (quizQuestions.count) {
+            questionLabel.text = quizQuestions[quizQuestionNumber].question
+            trueButton.isHidden = false
+            falseButton.isHidden = false
+            getItButton.isHidden = true
+            questionLabel.textColor = UIColor.white
+            finalResults.isHidden = true
+        }
+        else
+        {
+            questionLabel.text = quizQuestions[quizQuestionNumber].question
+            trueButton.isHidden = true
+            falseButton.isHidden = true
+            getItButton.isHidden = true
+            questionLabel.textColor = UIColor.white
+            finalResults.isHidden = true
+        }
     }
     
     
     func updateUIQuestions(){
         questionLabel.text = quizQuestions[quizQuestionNumber].question
         getItButton.isHidden = true
+        questionLabel.textColor = UIColor.white
+        
     }
 }
 
